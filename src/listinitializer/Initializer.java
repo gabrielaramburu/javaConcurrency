@@ -31,7 +31,7 @@ public class Initializer {
 		//I think this generate a bug because its assumes that the last instantiated thread will be the last one to finish.
 		//thread.join();
 		
-		synchronized (thread) {
+		synchronized (thread) { 
 			thread.wait();
 			showFooter();
 		}
