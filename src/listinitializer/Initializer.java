@@ -1,45 +1,44 @@
 package listinitializer;
 
-import java.security.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 
 public class Initializer {
 	
-	private long startTime; 
-	
-	private List<Data> exampleDataList = new ArrayList<Data>();
-	private int numberOfLists;
-	private int numberOfElements;
+	protected long startTime;
+	protected List<Data> exampleDataList;
+	protected int numberOfLists;
+	protected int numberOfElements;
+	protected int sumOfElements;
+	protected CountDownLatch latch;
 	
 	
 	public Initializer(int numberOfLists, int numberOfElement) {
+		this.exampleDataList = new ArrayList<Data>();
+		this.latch = new CountDownLatch(numberOfLists);
 		this.numberOfLists = numberOfLists;
 		this.numberOfElements = numberOfElement;
 	}
 	
-	public void startInitialization() throws InterruptedException {
+	public void startInitialization() {
 		startTime = System.currentTimeMillis();
 		
-		Thread thread = null;
 		for (int i=0; i < numberOfLists; i++) {
-			thread = new Thread(new InitialiterThread());
-			thread.start();
-		}
-
-		//I think this generate a bug because its assumes that the last instantiated thread will be the last one to finish.
-		//thread.join();
-		
-		synchronized (thread) { 
-			thread.wait();
-			showFooter();
+			new Thread(new InitializerThread()).start();
 		}
 		
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
+		showFooter();	
 	}
 	
-	class InitialiterThread implements Runnable{
+	class InitializerThread implements Runnable{
 		@Override
 		public void run() {
 			Data dataElement = new Data();
@@ -47,17 +46,32 @@ public class Initializer {
 			
 			synchronized (exampleDataList) {
 				exampleDataList.add(dataElement);
+				sumarizesData(dataElement);
 			}
-			
+		
+			latch.countDown();
 		}
 	}
 	
-	private void showFooter() {
+	private void sumarizesData(Data generetedData) {
+		this.sumOfElements = this.sumOfElements + generetedData.getSumarizeData();
+		
+	}
+	protected void showFooter() {
 		System.out.println("=================================================");
 		System.out.println("Number of list:" + exampleDataList.size());
+		System.out.println("Sum of generated numbers:" + sumOfElements);
 		System.out.println("Execution time: " + (System.currentTimeMillis() - startTime));
+		
 	}
 	
+	public List<Data> getList() {
+		return Collections.unmodifiableList(exampleDataList);
+	}
+
+	public Integer getSumOfElements() {
+		return sumOfElements;
+	}
 }
 
  

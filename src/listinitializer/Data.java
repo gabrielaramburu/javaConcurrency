@@ -9,6 +9,7 @@ public class Data {
 	private static final int MAX_GENERATED_VALUE = 1000;
 	
 	private List<Integer> list = new ArrayList<Integer>();
+	private int sumarizeData;
 	
 	public List<Integer> getList() {
 		return Collections.unmodifiableList(list);
@@ -20,11 +21,15 @@ public class Data {
 	
 	public void initializeData(int numberOfElements) {
 		System.out.println("Start initialization...");
-		for (int i=0; i< numberOfElements;i++) {
-			list.add(new Random().nextInt(MAX_GENERATED_VALUE));
+		
+		for (int i=0; i< numberOfElements; i++) {
+			int randonNumber = new Random().nextInt(MAX_GENERATED_VALUE);
+			list.add(randonNumber);
+			sumarizeData = sumarizeData + randonNumber;		
 			
-			pause(); //just for simulation some work
+			pause(); 
 		}
+		
 		System.out.println("List initialized. Size: " + list.size());
 	}
 	
@@ -34,5 +39,9 @@ public class Data {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public int getSumarizeData() {
+		return sumarizeData;
 	}
 }
