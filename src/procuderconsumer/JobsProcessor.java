@@ -1,10 +1,10 @@
 package procuderconsumer;
 
 public interface JobsProcessor {
-	public void sendJob(Job job);
-	public Job processJob();
+	public void produceJob(Job job);
+	public Job consumeJob();
 	
-	public int obtainTotalSended();
-	public int obtainTotalProcessed();
+	public int obtainTotalProduced();
+	public int obtainTotalConsumed();
 	public boolean stopQueueProcessing(Job signal);
 }

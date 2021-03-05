@@ -1,95 +1,102 @@
 package procuderconsumer;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import procuderconsumer.impl.BlockingQueueImpl;
-
-public class TestProducerConsumer {
+public class ProducerConsumer {
+	protected static final int MAX_JOBS = 10;
 	
 	private JobsProcessor jobsProcessor;
+	private Checker checker;
+	private CountDownLatch latch = new CountDownLatch(4);
+	private List<Thread> producerThreads = new ArrayList<Thread>();
+	
 	private long startTime;
 	private AtomicInteger jobCounter = new AtomicInteger(0);
-	private int c = 0;
 	
-	public TestProducerConsumer() {
-		this.jobsProcessor = new BlockingQueueImpl();
+	public ProducerConsumer(JobsProcessor jobProcessor) {
+		this.jobsProcessor = jobProcessor;
+		this.checker = new Checker();
 	}
 	
 	public void start() throws InterruptedException {
 		initTimer();
 		
 		startProducers();
-		//startConsumer();
+		startConsumer();
+		
+		sendFinalJob();
 		
 		showFooter();
 	}
 
-
+	private void initTimer() {
+		startTime = System.currentTimeMillis();
+	}
+	
 	private void startProducers() {
-		Thread producer1 = new Thread(new ProducerThread());
-		Thread producer2 = new Thread(new ProducerThread());
-		Thread producer3 = new Thread(new ProducerThread());
+		Thread producer1 = new Thread(createProducerThread());
+		Thread producer2 = new Thread(createProducerThread());
+		Thread producer3 = new Thread(createProducerThread());
+		
+		producerThreads.add(producer1);
+		producerThreads.add(producer2);
+		producerThreads.add(producer3);
 		
 		producer1.start();
 		producer2.start();
 		producer3.start();
+	}
+
+	private Runnable createProducerThread() {
 		
-//		Thread producerControler = new Thread(new ControlerThread());
-//		producerControler.start();
+		return new Runnable() {
+			@Override
+			public void run() {
+				Random random = new Random();
+				for (int i=0; i < MAX_JOBS; i++) {
+					System.out.println(Thread.currentThread().getName() + " Producing job:" + i);
+					
+					int value = random.nextInt(Job.MAX_JOB_VALUE);
+					Job job = new Job(jobCounter.getAndIncrement(), value);
+					jobsProcessor.produceJob(job);
+					
+					checker.acumulateProducedValues(value);	
+				}
+				latch.countDown();
+			}
+		};
 	}
 
 	private void startConsumer() throws InterruptedException {
-		Thread consumerThread = new Thread(new ConsumerThread());		
+		Thread consumerThread = new Thread(createConsumerThread());		
 		consumerThread.start();
-		
-		consumerThread.join();
-	}
-	
-	private void initTimer() {
-		startTime = System.currentTimeMillis();
+
 	}
 
-	class ProducerThread implements Runnable {
+	private Runnable createConsumerThread()  {
 		
-		@Override
-		public void run() {
-			
-			for (int i=0; i < Job.MAX_JOBS; i++) {
-				//Job job = new Job(jobCounter.getAndIncrement(), random.nextInt(Job.MAX_JOB_VALUE));
-				Job job = new Job(c++, 1);
-				jobsProcessor.sendJob(job);
+		return new Runnable() {
+			@Override
+			public void run() {
+				Job job;
 				
-				System.out.println(Thread.currentThread().getName() + " Sending job:" + i);
+				do {
+					job = jobsProcessor.consumeJob();
+					checker.acumulateConsumedValue(job.getValue());
+					System.out.println("Consumed job " + job.getId());
+					
+					pause(5);
+				} while (!jobsProcessor.stopQueueProcessing(job));
+				latch.countDown();
+				
 			}
-		}
-		
-	}
+		};
 
-	class ConsumerThread implements Runnable {
-
-		@Override
-		public void run() {
-			Job job;
-			do {
-				job = jobsProcessor.processJob();
-				System.out.println("Processing job " + job.getId());
-				
-				pause(5);
-			} while (!jobsProcessor.stopQueueProcessing(job));
-			
-		}
 	}
-	
-	class ControlerThread implements Runnable {
-
-		@Override
-		public void run() {
-			Job finalJob = new Job(true);
-			jobsProcessor.sendJob(finalJob);
-		}
-		
-	}
-	
 	
 	private void pause(int milis) {
 		try {
@@ -99,16 +106,47 @@ public class TestProducerConsumer {
 		}
 	}
 	
-	private void showFooter() {
-		System.out.println(
-				"Excecution result: producer=" + jobsProcessor.obtainTotalSended() + 
-				", consumer=" + jobsProcessor.obtainTotalProcessed());
+	private void sendFinalJob() {
+		try {
+			awaitForProducerThreadToFinish();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
-		System.out.println("Elapsed time: " + elapsedExecutionTime());
+		Job finalJob = new Job(true);
+		jobsProcessor.produceJob(finalJob);
+	}
+	
+	private void awaitForProducerThreadToFinish() throws InterruptedException {
+		for (Thread t: producerThreads) {
+			t.join();
+		}
+	}
+
+	private void showFooter() {
+		try {
+			latch.await();
+			System.out.println(
+					"Excecution result: producer=" + jobsProcessor.obtainTotalProduced() + 
+					", consumer=" + jobsProcessor.obtainTotalConsumed());
+			System.out.println(checker.toString());
+			System.out.println("Elapsed time: " + elapsedExecutionTime());
+			
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private long elapsedExecutionTime() {
 		return System.currentTimeMillis() - startTime;
+	}
+	
+	public Checker getChecker() {
+		return this.checker;
+	}
+	
+	public JobsProcessor getJobProcessor() {
+		return this.jobsProcessor;
 	}
 }
 

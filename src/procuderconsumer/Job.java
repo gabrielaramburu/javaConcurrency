@@ -2,7 +2,6 @@ package procuderconsumer;
 
 public class Job {
 	protected static final int MAX_JOB_VALUE = 100;
-	protected static final int MAX_JOBS = 1000;
 	
 	private int id;
 	private int value;

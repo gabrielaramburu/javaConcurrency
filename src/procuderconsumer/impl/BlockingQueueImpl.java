@@ -16,7 +16,7 @@ public class BlockingQueueImpl implements JobsProcessor{
 	private Object lock = new Object();
 	
 	@Override
-	public void sendJob(Job job) {
+	public void produceJob(Job job) {
 		try {
 			queue.put(job);
 			incrementTotal(job);
@@ -26,19 +26,27 @@ public class BlockingQueueImpl implements JobsProcessor{
 	}
 
 	private void incrementTotal(Job job) {
-//		synchronized (lock) {
-//			totalSended = totalSended + job.getValue();
-//		}
-		totalSended = totalSended + job.getValue();
+		synchronized (lock) {
+			pause(5);
+			totalSended = totalSended + job.getValue();
+		}
 	}
 
 
+	private void pause(int i) {
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
-	public Job processJob() {
+	public Job consumeJob() {
 		Job job = null;
 		try {
-			/* is the queue is empty the take method will wait until a new element arrives.
-			 * therefore there is no danger that job instance become null */
+			/* If the queue is empty the take method will wait until a new element arrives.
+			 * Therefore there is no danger that job instance become null */
 			job = queue.take();
 			incrementProcessedJob(job);
 		} catch (InterruptedException e) {
@@ -49,20 +57,23 @@ public class BlockingQueueImpl implements JobsProcessor{
 	}
 
 	private void incrementProcessedJob(Job job) {
-//		synchronized (lock) {
-//			totalProcessed = totalProcessed + job.getValue();
-//		}
+		/* In order to better favor race conditions the pause must be closer to the sentence that change the shared resource
+		 * (at least my testing cases)*/
 		
-		totalProcessed = totalProcessed + job.getValue();
+		synchronized (lock) {
+			pause(5);
+			totalProcessed = totalProcessed + job.getValue();
+		}
+		
 	}
 
 	@Override
-	public int obtainTotalSended() {
+	public int obtainTotalProduced() {
 		return totalSended;
 	}
 
 	@Override
-	public int obtainTotalProcessed() {
+	public int obtainTotalConsumed() {
 		return totalProcessed;
 	}
 

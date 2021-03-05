@@ -3,13 +3,12 @@ package procuderconsumer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 
 import procuderconsumer.impl.BlockingQueueImpl;
 
 public class TestProducerConsumer {
 
-	@RepeatedTest(10)
+	@RepeatedTest(50)
 	void testBlockingQueueImpl() throws InterruptedException {
 		ProducerConsumer producerConsumer = new ProducerConsumer(new BlockingQueueImpl());
 		producerConsumer.start();

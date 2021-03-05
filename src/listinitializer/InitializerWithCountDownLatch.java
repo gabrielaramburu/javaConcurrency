@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-public class Initializer {
+public class InitializerWithCountDownLatch {
 	
 	protected long startTime;
 	protected List<Data> exampleDataList;
@@ -15,7 +15,7 @@ public class Initializer {
 	protected CountDownLatch latch;
 	
 	
-	public Initializer(int numberOfLists, int numberOfElement) {
+	public InitializerWithCountDownLatch(int numberOfLists, int numberOfElement) {
 		this.exampleDataList = new ArrayList<Data>();
 		this.latch = new CountDownLatch(numberOfLists);
 		this.numberOfLists = numberOfLists;

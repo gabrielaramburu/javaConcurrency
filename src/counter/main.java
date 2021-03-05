@@ -8,22 +8,22 @@ import counter.impl.ThreadSafeCountableWihtUnestructuredLock;
 public class main {
 
 	public static void main(String[] args) {
-		TestCountable testContable;
+		RunnerWithExcecutorService testContable;
 		
 		try {
-			testContable = new TestCountable("Test 1", new CountableImpl(), 1);
+			testContable = new RunnerWithExcecutorService("Test 1", new CountableImpl(), 1);
 			testContable.startTest();
 			
-			testContable = new TestCountable("Test 2", new CountableImpl(), 2);
+			testContable = new RunnerWithExcecutorService("Test 2", new CountableImpl(), 2);
 			testContable.startTest();
 			
-			testContable = new TestCountable("Test 3", new ThreadSafeCountableImpl(), 2);
+			testContable = new RunnerWithExcecutorService("Test 3", new ThreadSafeCountableImpl(), 2);
 			testContable.startTest();
 			
-			testContable = new TestCountable("Test 4", new ThreadSafeCountableV2Impl(), 2);
+			testContable = new RunnerWithExcecutorService("Test 4", new ThreadSafeCountableV2Impl(), 2);
 			testContable.startTest();
 			
-			testContable = new TestCountable("Test 4", new ThreadSafeCountableWihtUnestructuredLock(), 5);
+			testContable = new RunnerWithExcecutorService("Test 4", new ThreadSafeCountableWihtUnestructuredLock(), 5);
 			testContable.startTest();
 			
 			
