@@ -1,10 +1,10 @@
-package procuderconsumer.impl;
+package producerconsumer.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import procuderconsumer.AbstractJobProcessor;
-import procuderconsumer.Job;
+import producerconsumer.AbstractJobProcessor;
+import producerconsumer.Job;
 
 public class QueueLowLevelImpl extends AbstractJobProcessor {
 	private int maxCapacity;
@@ -24,14 +24,12 @@ public class QueueLowLevelImpl extends AbstractJobProcessor {
 					while (queue.size() >= maxCapacity) {
 						queue.wait();
 					}
-					addJobToQueue(job);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			} else {
-				addJobToQueue(job);
-				queue.notifyAll();
-			}
+			} 
+			addJobToQueue(job);
+			queue.notifyAll();
 		}
 	}
 	
@@ -44,20 +42,18 @@ public class QueueLowLevelImpl extends AbstractJobProcessor {
 	public Job consumeJob() {
 		Job job = null;
 		synchronized (queue) {
-			if (!queue.isEmpty()) {
-				job = removeFromQueue();
-				queue.notifyAll();
-			} else {
+			if (queue.isEmpty()) {
 				try {
 					while (queue.isEmpty()) {
 						queue.wait();
 					}
-					job = removeFromQueue();
-					queue.notifyAll();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}
+				}		
 			}
+			
+			job = removeFromQueue();
+			queue.notifyAll();
 		}
 		return job;
 	}

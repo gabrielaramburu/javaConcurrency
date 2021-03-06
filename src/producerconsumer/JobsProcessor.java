@@ -1,4 +1,4 @@
-package procuderconsumer;
+package producerconsumer;
 
 public interface JobsProcessor {
 	

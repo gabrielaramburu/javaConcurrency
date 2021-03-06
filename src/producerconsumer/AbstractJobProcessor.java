@@ -1,4 +1,4 @@
-package procuderconsumer;
+package producerconsumer;
 
 public abstract class AbstractJobProcessor implements JobsProcessor{
 	private int totalProduced = 0;

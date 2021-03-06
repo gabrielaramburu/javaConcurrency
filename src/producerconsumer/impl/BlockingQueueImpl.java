@@ -1,10 +1,10 @@
-package procuderconsumer.impl;
+package producerconsumer.impl;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import procuderconsumer.AbstractJobProcessor;
-import procuderconsumer.Job;
+import producerconsumer.AbstractJobProcessor;
+import producerconsumer.Job;
 
 public class BlockingQueueImpl extends AbstractJobProcessor{
 	private static final int CAPACITY = 10;

@@ -1,4 +1,4 @@
-package procuderconsumer;
+package producerconsumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -7,8 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import procuderconsumer.impl.BlockingQueueImpl;
-import procuderconsumer.impl.QueueLowLevelImpl;
+import producerconsumer.impl.BlockingQueueImpl;
+import producerconsumer.impl.QueueLowLevelImpl;
 
 public class TestProducerConsumer {
 	protected static final int MAX_JOBS = 10;

@@ -1,4 +1,4 @@
-package procuderconsumer;
+package producerconsumer;
 
 public class Job {
 	protected static final int MAX_JOB_VALUE = 100;
