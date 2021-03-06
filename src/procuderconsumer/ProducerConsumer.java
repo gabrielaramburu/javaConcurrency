@@ -7,8 +7,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ProducerConsumer {
-	protected static final int MAX_JOBS = 10;
 	
+	private int numbersOfJobs;
 	private JobsProcessor jobsProcessor;
 	private Checker checker;
 	private CountDownLatch latch = new CountDownLatch(4);
@@ -17,8 +17,9 @@ public class ProducerConsumer {
 	private long startTime;
 	private AtomicInteger jobCounter = new AtomicInteger(0);
 	
-	public ProducerConsumer(JobsProcessor jobProcessor) {
+	public ProducerConsumer(JobsProcessor jobProcessor, int jobs) {
 		this.jobsProcessor = jobProcessor;
+		this.numbersOfJobs = jobs;
 		this.checker = new Checker();
 	}
 	
@@ -57,10 +58,11 @@ public class ProducerConsumer {
 			@Override
 			public void run() {
 				Random random = new Random();
-				for (int i=0; i < MAX_JOBS; i++) {
+				for (int i=0; i < numbersOfJobs; i++) {
 					System.out.println(Thread.currentThread().getName() + " Producing job:" + i);
 					
 					int value = random.nextInt(Job.MAX_JOB_VALUE);
+
 					Job job = new Job(jobCounter.getAndIncrement(), value);
 					jobsProcessor.produceJob(job);
 					

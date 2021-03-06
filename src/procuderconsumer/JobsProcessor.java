@@ -1,6 +1,7 @@
 package procuderconsumer;
 
 public interface JobsProcessor {
+	
 	public void produceJob(Job job);
 	public Job consumeJob();
 	
