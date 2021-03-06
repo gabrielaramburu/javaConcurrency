@@ -91,7 +91,7 @@ public class ProducerConsumer {
 					checker.acumulateConsumedValue(job.getValue());
 					System.out.println("Consumed job " + job.getId());
 					
-					pause(5);
+					pause(50);
 				} while (!jobsProcessor.stopQueueProcessing(job));
 				latch.countDown();
 				
@@ -128,6 +128,7 @@ public class ProducerConsumer {
 	private void showFooter() {
 		try {
 			latch.await();
+			System.out.println(jobsProcessor.getClass().getSimpleName());
 			System.out.println(
 					"Excecution result: producer=" + jobsProcessor.obtainTotalProduced() + 
 					", consumer=" + jobsProcessor.obtainTotalConsumed());

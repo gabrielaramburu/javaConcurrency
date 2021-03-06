@@ -3,6 +3,7 @@ package procuderconsumer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
@@ -11,10 +12,10 @@ import procuderconsumer.impl.QueueLowLevelImpl;
 
 public class TestProducerConsumer {
 	protected static final int MAX_JOBS = 10;
+	protected static final int NO_JOBS = 0;
 	
-	
-	@Disabled
-	@RepeatedTest(50)
+	@DisplayName("ProducerConsumer using BlockingQueue, normal excecution.")
+	@RepeatedTest(5)
 	void testBlockingQueueImpl() throws InterruptedException {
 		ProducerConsumer producerConsumer = new ProducerConsumer(new BlockingQueueImpl(), MAX_JOBS);
 		producerConsumer.start();
@@ -23,9 +24,42 @@ public class TestProducerConsumer {
 		
 	}
 	
-	@Test
+	@DisplayName("ProducerConsumer using low level synchronization idioms, normal excecution.")
+	@RepeatedTest(5)
 	void testQueueLowLevelImpl() throws InterruptedException {
-		ProducerConsumer producerConsumer = new ProducerConsumer(new QueueLowLevelImpl(), MAX_JOBS);
+		int maxCapacityOfQueue = 10;
+		ProducerConsumer producerConsumer = new ProducerConsumer(new QueueLowLevelImpl(maxCapacityOfQueue), MAX_JOBS);
+		producerConsumer.start();
+		
+		assertExecutionOfProducerConsumer(producerConsumer);
+	}
+	
+	
+	@DisplayName("Low level implemmentation with no produced job.")
+	@Test
+	void testQueueWithNoProducedJobs() throws InterruptedException {
+		int maxCapacityOfQueue = 10;
+		ProducerConsumer producerConsumer = new ProducerConsumer(new QueueLowLevelImpl(maxCapacityOfQueue), NO_JOBS);
+		producerConsumer.start();
+		
+		assertExecutionOfProducerConsumer(producerConsumer);
+	}
+	
+	@DisplayName("Low level implemmentation with a large queue.")
+	@Test
+	void testQueueWithBigCapacity() throws InterruptedException {
+		int maxCapacityOfQueue = 100;
+		ProducerConsumer producerConsumer = new ProducerConsumer(new QueueLowLevelImpl(maxCapacityOfQueue), MAX_JOBS);
+		producerConsumer.start();
+		
+		assertExecutionOfProducerConsumer(producerConsumer);
+	}
+	
+	@DisplayName("Low level implemmentation with a small queue.")
+	@Test
+	void testQueueWithSmallCapacity() throws InterruptedException {
+		int maxCapacityOfQueue = 2;
+		ProducerConsumer producerConsumer = new ProducerConsumer(new QueueLowLevelImpl(maxCapacityOfQueue), MAX_JOBS);
 		producerConsumer.start();
 		
 		assertExecutionOfProducerConsumer(producerConsumer);
@@ -42,4 +76,5 @@ public class TestProducerConsumer {
 				producerConsumer.getJobProcessor().obtainTotalConsumed(), 
 				"The values consumed are the same in both process.");
 	}
+
 }

@@ -7,27 +7,37 @@ import procuderconsumer.AbstractJobProcessor;
 import procuderconsumer.Job;
 
 public class QueueLowLevelImpl extends AbstractJobProcessor {
-	private static final int CAPACITY = 10;
+	private int maxCapacity;
 	
+	public QueueLowLevelImpl(int capacity) {
+		super();
+		this.maxCapacity = capacity;
+	}
+
 	private List<Job> queue = new ArrayList<Job>();
 	
 	@Override
 	public void produceJob(Job job) {
 		synchronized(queue) {
-			if (queue.size() >= CAPACITY) {
+			if (queue.size() >= maxCapacity) {
 				try {
-					while (queue.size() > CAPACITY) {
+					while (queue.size() >= maxCapacity) {
 						queue.wait();
 					}
-					queue.add(job);
+					addJobToQueue(job);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			} else {
-				queue.add(job);
+				addJobToQueue(job);
 				queue.notifyAll();
 			}
 		}
+	}
+	
+	private void addJobToQueue(Job job) {
+		incrementProducedValue(job);
+		queue.add(job);
 	}
 
 	@Override
@@ -56,6 +66,7 @@ public class QueueLowLevelImpl extends AbstractJobProcessor {
 		int lastIn = 0;
 		Job job = queue.get(lastIn);
 		queue.remove(lastIn);
+		incrementConsumedValue(job);
 		return job;
 	}
 
