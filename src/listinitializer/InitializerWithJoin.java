@@ -3,7 +3,7 @@ package listinitializer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InitializerWithJoin extends Initializer{
+public class InitializerWithJoin extends InitializerWithCountDownLatch{
 
 	public InitializerWithJoin(int numberOfLists, int numberOfElement) {
 		super(numberOfLists, numberOfElement);

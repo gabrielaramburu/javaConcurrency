@@ -4,14 +4,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class TestCountable {
+public class RunnerWithExcecutorService {
 	private static final int NUMBERS_OF_ITERATION = 100;
 	
 	private Countable countable;
 	private int numberOfThread;
 	private String testName;
 	
-	public TestCountable(String testName, Countable countableImpl, int numberOfThread) {
+	public RunnerWithExcecutorService(String testName, Countable countableImpl, int numberOfThread) {
 		this.testName = testName;
 		this.countable =  countableImpl;
 		this.numberOfThread = numberOfThread;

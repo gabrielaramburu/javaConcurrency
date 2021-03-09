@@ -1,4 +1,4 @@
-package procuderconsumer;
+package producerconsumer;
 
 public class Checker {
 	private int totalProduced = 0;

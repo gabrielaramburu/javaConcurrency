@@ -7,14 +7,14 @@ import org.junit.jupiter.api.Test;
 class TestInitializer {
 	private int numberOfList;
 	private int numberOfElementsPerList;
-	private Initializer initializer;
+	private InitializerWithCountDownLatch initializer;
 	private Checker checker;
 
 	@Test
-	void testInitializer() {
+	void testInitializerWithCountDownLatch() {
 		numberOfList = 5;
 		numberOfElementsPerList = 1000;
-		runInitializerAndChecker(new Initializer(numberOfList, numberOfElementsPerList));
+		runInitializerAndChecker(new InitializerWithCountDownLatch(numberOfList, numberOfElementsPerList));
 		
 		runAsserts();
 	}
@@ -28,7 +28,7 @@ class TestInitializer {
 		runAsserts();
 	}
 	
-	private void runInitializerAndChecker(Initializer initializer) {
+	private void runInitializerAndChecker(InitializerWithCountDownLatch initializer) {
 		this.initializer = initializer;
 		this.initializer.startInitialization();
 		checker = new Checker(this.initializer.getList());
