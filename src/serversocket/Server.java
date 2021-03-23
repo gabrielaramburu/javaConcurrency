@@ -25,9 +25,7 @@ public class Server {
 		serverIsReady = true;
 		while (acceptingConnection()) {
 			try {
-				System.out.println("Server->Accepting conections...");
-				Socket socket = serverSocket.accept();
-				proccessRequest(socket);
+				proccessRequest();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -53,7 +51,10 @@ public class Server {
 		return serverIsReady;
 	}
 	
-	private void proccessRequest(Socket socket) throws IOException {
+	private void proccessRequest() throws IOException {
+		System.out.println("Server->Accepting conections...");
+		Socket socket = serverSocket.accept();
+	
 		System.out.println("Server->Getting message...");
 		String message = MessageUtil.readMessage(socket);
 		pause(100);
