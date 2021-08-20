@@ -18,7 +18,7 @@ public class PrintInOrder {
 		synchronized (lock1) {
 			lock1.notify();
 		}
-
+ 
 	}
 
 	public void second(Runnable printSecond) throws InterruptedException {
