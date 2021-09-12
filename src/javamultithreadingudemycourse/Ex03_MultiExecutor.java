@@ -1,7 +1,8 @@
 package javamultithreadingudemycourse;
+import java.util.List;
 
 public class Ex03_MultiExecutor {
-    import java.util.List;
+ 
 
     // Add any necessary member variables here
     List<Runnable> tasks;
