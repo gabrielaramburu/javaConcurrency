@@ -12,6 +12,7 @@ public class Ex08_HttpServer {
 
 	public static void main(String[] args) throws IOException {
 		String text = new String(Files.readAllBytes(Paths.get(INPUT_FILE)));
+		System.out.println("Number of cores " + Runtime.getRuntime().availableProcessors());
 
 		HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 		server.createContext("/test", new TestHandler(text));
