@@ -41,9 +41,9 @@ class Intersection {
 	}
 
 	void takeRailA() {
-		synchronized(railA) {
+		synchronized(railA) {		//the key to avoid deadlock is to adquired the block y the same order
 			System.out.println(Thread.currentThread().getName() + " The rail A has been taken.");
-			synchronized(railB) {
+			synchronized(railB) {	//same order
 				System.out.println(Thread.currentThread().getName() + " The rail B has been taken.");
 				System.out.println("The trainA is passing on rail A.");
 				pause(500);
@@ -55,9 +55,9 @@ class Intersection {
 	}
 
 	void takeRailB() {
-		synchronized(railA) {
+		synchronized(railA) { //same order respect to line 44 and 46
 			System.out.println(Thread.currentThread().getName() + " The rail B has been taken.");
-			synchronized(railB) {
+			synchronized(railB) { //same order respect to line 44 ans 46
 				System.out.println(Thread.currentThread().getName() + " The rail A has been taken.");
 				System.out.println("The trainB is passing on rail B.");
 				pause(500);
