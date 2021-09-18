@@ -1,6 +1,8 @@
 package javamultithreadingudemycourse;
 
-
+/* this idea is forom java documentation 
+https://docs.oracle.com/javase/specs/jls/se11/html/jls-8.html#jls-8.3.1.4
+volatile fields */
 public class Ex09_ReorderingJavaMemoryModelVolatileExample {
 	static  int i = 0;
 	static  int j = 0;
