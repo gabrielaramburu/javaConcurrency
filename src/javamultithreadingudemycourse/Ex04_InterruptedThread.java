@@ -1,11 +1,11 @@
 package javamultithreadingudemycourse;
 
 public class Ex04_InterruptedThread {
-    public static void main(String args[]) throws InterruptedException {
+    public static void main(String args[])  {
         Thread t = new Thread(new InterruptedThread());
         t.start();
         System.out.println("Waiting a little...");
-        Thread.sleep(2000);
+        pause(2000);
         t.interrupt();
     }
 
@@ -18,6 +18,14 @@ public class Ex04_InterruptedThread {
                 }
             }
             System.out.println("Thread excecution end.");
+        }
+    }
+
+    static void pause(long interval) {
+        try {
+            Thread.sleep(interval);
+        } catch (InterruptedException e) {
+            System.err.println("Error");
         }
     }
 }
