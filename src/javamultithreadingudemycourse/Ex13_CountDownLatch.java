@@ -1,3 +1,5 @@
+package javamultithreadingudemycourse;
+
 public class Ex13_CountDownLatch {
     private int count;
 
@@ -15,7 +17,7 @@ public class Ex13_CountDownLatch {
     public void await() throws InterruptedException {
         /**
          * Fill in your code
-         *//
+         */
         synchronized(this){
             if (count > 0) {
                 this.wait();
@@ -30,7 +32,7 @@ public class Ex13_CountDownLatch {
     public void countDown() {
         /**
          * Fill in your code
-         *//
+         */
         synchronized(this) {
             if (count == 0) return;
 
@@ -47,7 +49,7 @@ public class Ex13_CountDownLatch {
     public int getCount() {
         /**
          * Fill in your code
-         *//      
+         */     
          synchronized(this){
             return this.count;
          }  

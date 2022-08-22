@@ -1,14 +1,22 @@
 package javamultithreadingudemycourse;
 
-import com.sun.net.httpserver.*;
-import java.util.concurrent.*;
-import java.io.*;
-import java.nio.file.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+
+
 
 public class Ex08_HttpServer {
 	private static final int NUMBERS_OF_THREADS = 1;
-	private static final String INPUT_FILE = "peaceAndWar.txt";
+	private static final String INPUT_FILE = "/home/gabriel/workspace/Threads/src/javamultithreadingudemycourse/peaceAndWar.txt";
 
 	public static void main(String[] args) throws IOException {
 		String text = new String(Files.readAllBytes(Paths.get(INPUT_FILE)));

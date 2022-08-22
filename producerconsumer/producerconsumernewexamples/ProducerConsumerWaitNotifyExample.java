@@ -1,6 +1,7 @@
 package producerconsumernewexamples;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProducerConsumerWaitNotifyExample {
 	static final int MAX_CAPACITY = 5;
